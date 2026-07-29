@@ -39,7 +39,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.alibaba</groupId>
+			<groupId>com.jumpserver</groupId>
 			<artifactId>druid</artifactId>
 			<version>${project.version}</version>
 		</dependency>
