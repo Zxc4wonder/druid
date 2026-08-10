@@ -787,11 +787,24 @@ public class PGSQLStatementParser extends SQLStatementParser {
                     lexer.nextToken();
                     accept(Token.NULL);
                     alterColumn.setSetNotNull(true);
+                } else if (lexer.identifierEquals("DATA")) {
+                    // ALTER COLUMN col SET DATA TYPE <type>
+                    lexer.nextToken();
+                    if (lexer.token() == Token.TYPE) {
+                        lexer.nextToken();
+                    } else {
+                        acceptIdentifier("TYPE");
+                    }
+                    alterColumn.setDataType(this.exprParser.parseDataType());
                 } else {
                     accept(Token.DEFAULT);
                     SQLExpr defaultValue = this.exprParser.expr();
                     alterColumn.setSetDefault(defaultValue);
                 }
+            } else if (lexer.token() == Token.TYPE || lexer.identifierEquals(FnvHash.Constants.TYPE)) {
+                // ALTER COLUMN col TYPE <type>
+                lexer.nextToken();
+                alterColumn.setDataType(this.exprParser.parseDataType());
             } else if (lexer.token() == Token.DROP) {
                 lexer.nextToken();
                 if (lexer.token() == Token.NOT) {
@@ -804,6 +817,15 @@ public class PGSQLStatementParser extends SQLStatementParser {
                 }
             }
         }
+
+        // PostgreSQL: ALTER COLUMN col [SET DATA] TYPE <type> USING <expr>.
+        // parseColumn may already have consumed "TYPE <type>" into the column definition, so this
+        // check is outside the block above (issue #6064).
+        if (lexer.token() == Token.USING || lexer.identifierEquals("USING")) {
+            lexer.nextToken();
+            alterColumn.setUsing(this.exprParser.expr());
+        }
+
         return alterColumn;
     }
 
