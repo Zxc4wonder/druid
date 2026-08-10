@@ -2139,7 +2139,10 @@ public class SQLSelectParser extends SQLParser {
             lexer.nextToken();
             SQLExpr offset = this.exprParser.expr();
             queryBlock.setOffset(offset);
-            if (lexer.identifierEquals(FnvHash.Constants.ROW) || lexer.identifierEquals(FnvHash.Constants.ROWS)) {
+            if (lexer.token == Token.ROW
+                    || lexer.token == Token.ROWS
+                    || lexer.identifierEquals(FnvHash.Constants.ROW)
+                    || lexer.identifierEquals(FnvHash.Constants.ROWS)) {
                 lexer.nextToken();
             }
         }
@@ -2155,7 +2158,10 @@ public class SQLSelectParser extends SQLParser {
             }
             SQLExpr first = this.exprParser.primary();
             queryBlock.setFirst(first);
-            if (lexer.identifierEquals(FnvHash.Constants.ROW) || lexer.identifierEquals(FnvHash.Constants.ROWS)) {
+            if (lexer.token == Token.ROW
+                    || lexer.token == Token.ROWS
+                    || lexer.identifierEquals(FnvHash.Constants.ROW)
+                    || lexer.identifierEquals(FnvHash.Constants.ROWS)) {
                 lexer.nextToken();
             }
 
