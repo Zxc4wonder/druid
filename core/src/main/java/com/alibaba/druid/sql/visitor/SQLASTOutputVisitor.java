@@ -295,6 +295,9 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             return;
         }
 
+        if (endLineComment && value != '\n' && value != '\r') {
+            println();
+        }
         this.appender.append(value);
     }
 
@@ -366,6 +369,10 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             return;
         }
 
+        if (endLineComment
+                && (text == null || (!text.isEmpty() && text.charAt(0) != '\n' && text.charAt(0) != '\r'))) {
+            println();
+        }
         this.appender.append(text);
     }
 
